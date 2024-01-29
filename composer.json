@@ -1,0 +1,22 @@
+{
+    "name": "fauxify/fauxify",
+    "description": "A library for php to seed fake data",
+    "type": "library",
+    "license": "MIT",
+    "version": "1.0.0",
+    "autoload": {
+        "psr-4": {
+            "Fauxify\\Fauxify\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Sagar Gurung",
+            "email": "sgrgug@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require-dev": {
+        "phpunit/phpunit": "^11.0@dev"
+    }
+}
