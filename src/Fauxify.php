@@ -19,18 +19,17 @@ class Fauxify {
                 {
                     return new Generator(self::$providerClasses, $locale);
                 } else {
-                    echo "No Class found!";
-                    exit;
+                    return "No Class found!";
                 }
             }
         } else {
-            echo "No Provider found!";
+            return "No Provider found!";
         }
     }
 
     public static function getProviderExistance($locale)
     {
-        return file_exists('src/Provider/' . $locale);
+        return file_exists(__DIR__ . '/Provider/' . $locale);
     }
 
     public static function findroviderClass($providerClass, $locale)
