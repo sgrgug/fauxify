@@ -10,9 +10,16 @@ class ParentCity extends Base{
         'Pokhara'
     ];
 
-    public function city()
+    public function city($unique = NULL)
     {
-        return $this->randArray($this->city);
+        if($unique == 'UNIQUE')
+        {
+            $this->shuffleArray(__FUNCTION__, $this->city);
+            $this->incrementMethodCallCount(__FUNCTION__);
+            return $this->shuffled[__FUNCTION__][$this->methodCallCount[__FUNCTION__]] ?? NULL;
+        } else {
+            return $this->randArray($this->city);
+        }
     }
 
 }

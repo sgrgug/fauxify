@@ -57,6 +57,25 @@ for($i = 0; $i<3; $i++)
 // Ram Magar
 
 ```
+You can generate unique data by following way. You just need to send 'UNIQUE' as a parameter. 
+
+Unique Generating Support Methods.
+- city("UNIQUE")
+- payment("UNIQUE")
+
+```php
+<?php
+
+for($i = 0; $i<3; $i++)
+{
+    echo $fauxify->city("UNIQUE");
+}
+
+// Pokhara
+// Kathmandu
+// Butwal
+
+```
 
 ## Contribute
 Exciting things are happening! Join us in improving Fauxify. Your contributions matter. Let's build together
