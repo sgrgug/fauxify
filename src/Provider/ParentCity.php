@@ -12,7 +12,7 @@ class ParentCity extends Base{
 
     public function city($unique = NULL)
     {
-        if($unique == 'UNIQUE')
+        if(strtoupper($unique) == 'UNIQUE')
         {
             $this->shuffleArray(__FUNCTION__, $this->city);
             $this->incrementMethodCallCount(__FUNCTION__);

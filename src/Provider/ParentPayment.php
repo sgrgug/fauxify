@@ -13,7 +13,7 @@ class ParentPayment extends Base{
     public function payment($unique = NULL)
     {
 
-        if($unique == 'UNIQUE')
+        if(strtoupper($unique) == 'UNIQUE')
         {
             $this->shuffleArray(__FUNCTION__, $this->payment);
             $this->incrementMethodCallCount(__FUNCTION__);
