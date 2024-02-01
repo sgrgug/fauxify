@@ -19,7 +19,7 @@ Fauxify is a PHP library designed for developers to generate synthetic data effi
 
 ## Installation
 
-Install my-project with npm
+Install with Composer
 
 ```bash
   composer require fauxify/fauxify
