@@ -1,6 +1,9 @@
 # Changelog for [Fauxify]
 
-## [V1.0.3] - [Feb 1, 2024]
+## [v1.0.5] - [Feb 2, 2024]
+- Phoen Provider Added (->mobileNumber()).
+
+## [v1.0.3] - [Feb 1, 2024]
 
 ## Added
 - [New] Payment Provider Added. Support both Nepali and English.
