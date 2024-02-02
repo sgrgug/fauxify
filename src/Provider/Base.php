@@ -18,7 +18,7 @@ class Base {
      * @param $methodName - Name of the method / function
      * @return void
      */
-    public function incrementMethodCallCount($methodName)
+    public function incrementMethodCallCount(string $methodName)
     {
         if(!isset($this->methodCallCount[$methodName])){
             $this->methodCallCount[$methodName] = 0;
@@ -27,7 +27,13 @@ class Base {
         }
     }
     
-    public function shuffleArray($methodName, Array $shuffleArray)
+    /**
+     * It shuffle the array and store the shuffled array in the $shuffled array.
+     * @param $methodName - Name of the method / function
+     * @param $shuffleArray - Array to be shuffled
+     * @return void
+     */
+    public function shuffleArray(string $methodName, array $shuffleArray)
     {
         if(!isset($this->isShuffle[$methodName])){
             shuffle($shuffleArray);
@@ -37,7 +43,12 @@ class Base {
     }
 
 
-    public function randArray($array)
+    /**
+     * It return the random value from the array
+     * @param $methodName - Name of the method / function
+     * @return string
+     */
+    public function randArray(array $array): string
     {
         return $array[array_rand($array)];
     }
