@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Provider;
+namespace Tests\Provider\Eng;
 
 use PHPUnit\Framework\TestCase;
 use Fauxify\Fauxify\Provider\Eng\City;

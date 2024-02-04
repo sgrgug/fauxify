@@ -1,5 +1,8 @@
 # Changelog for [Fauxify]
 
+## [v1.0.6] - [Feb 4, 2024]
+- [Fix] strtoupper(): Passing null to parameter #1 ($string) of type string is deprecated.
+
 ## [v1.0.5] - [Feb 2, 2024]
 - Phoen Provider Added (->mobileNumber()).
 

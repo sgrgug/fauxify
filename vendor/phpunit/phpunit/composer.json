@@ -21,7 +21,6 @@
         "security": "https://github.com/sebastianbergmann/phpunit/security/policy"
     },
     "prefer-stable": true,
-    "minimum-stability": "dev",
     "require": {
         "php": ">=8.2",
         "ext-dom": "*",
@@ -83,7 +82,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "11.0-dev"
+            "dev-main": "11.1-dev"
         }
     }
 }

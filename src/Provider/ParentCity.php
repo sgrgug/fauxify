@@ -16,7 +16,7 @@ class ParentCity extends Base{
      * @param $unique - It is a string. If it is 'unique' then it return the unique value from the array.
      * @return string
      */
-    public function city(string $unique = NULL): string
+    public function city(string $unique = ""): string
     {
         if(strtoupper($unique) == 'UNIQUE')
         {

@@ -16,7 +16,7 @@ class ParentPayment extends Base{
      * @param $unique - It is a string. If it is 'unique' then it return the unique value from the array.
      * @return string
      */
-    public function payment(string $unique = NULL): string
+    public function payment(string $unique = ""): string
     {
 
         if(strtoupper($unique) == 'UNIQUE')
