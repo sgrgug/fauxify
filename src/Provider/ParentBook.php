@@ -19,7 +19,7 @@ class ParentBook extends Base
 
     public function bookName()
     {
-        return "book Name";
+        return "Testing";
     }
 
     public function bookPrice()

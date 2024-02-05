@@ -1,5 +1,8 @@
 # Changelog for [Fauxify]
 
+## [v1.0.7] - [Feb 5, 2024]
+- [Add] New Provider Blog. blogTitle() & blogContent(). Support Eng only at the moment.
+
 ## [v1.0.6] - [Feb 4, 2024]
 - [Fix] strtoupper(): Passing null to parameter #1 ($string) of type string is deprecated.
 
