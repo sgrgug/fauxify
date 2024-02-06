@@ -1,5 +1,8 @@
 # Changelog for [Fauxify]
 
+## [v1.0.8] - [Feb 6, 2024]
+- Test Code.
+
 ## [v1.0.7] - [Feb 5, 2024]
 - [Add] New Provider Blog. blogTitle() & blogContent(). Support Eng only at the moment.
 
