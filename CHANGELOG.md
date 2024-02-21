@@ -1,5 +1,10 @@
 # Changelog for [Fauxify]
 
+## [v1.0.9] - [Feb 15, 2024]
+- [Add] Banks - Three class banks at the moment (class A - Commercial Banks, class B - Development Banks, class C - Finance Companies).
+- Support Eng / Nep.
+- Total 54 banks added.
+
 ## [v1.0.8] - [Feb 6, 2024]
 - Test Code.
 

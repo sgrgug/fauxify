@@ -7,7 +7,7 @@ use Fauxify\Fauxify\Generator;
 class Fauxify {
 
     public const DEFAULT_LOCALE = 'Eng';
-    protected static $providerClasses = ['Person', 'City', 'Payment', 'Book', 'Phone', 'Blog'];
+    protected static $providerClasses = ['Person', 'City', 'Payment', 'Book', 'Phone', 'Blog', 'Bank', 'Color'];
 
     public static function create($locale = self::DEFAULT_LOCALE)
     {
