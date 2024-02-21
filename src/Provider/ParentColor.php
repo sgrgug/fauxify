@@ -4,28 +4,28 @@ namespace Fauxify\Fauxify\Provider;
 
 use Fauxify\Fauxify\Provider\Base;
 
-class ParentPayment extends Base{
+class ParentColor extends Base{
 
-    // List of payment in array
-    protected $payment = [
-        'Esewa', 'Khalti', 'IME Pay', 'Connect IP', 'NTC Pay'
+    // List of color in array
+    protected $color = [
+        'Red',
     ];
 
     /**
-     * It return the random payment from the array || It return the unique payment from the array.
+     * It return the random color from the array || It return the unique color from the array.
      * @param $unique - It is a string. If it is 'unique' then it return the unique value from the array.
      * @return string
      */
-    public function payment(string $unique = ""): string
+    public function color(string $unique = ""): string
     {
 
         if(strtoupper($unique) == 'UNIQUE')
         {
-            $this->shuffleArray(__FUNCTION__, $this->payment);
+            $this->shuffleArray(__FUNCTION__, $this->color);
             $this->incrementMethodCallCount(__FUNCTION__);
             return $this->shuffled[__FUNCTION__][$this->methodCallCount[__FUNCTION__]] ?? NULL;
         } else {
-            return $this->randArray($this->payment);
+            return $this->randArray($this->color);
         }
     }
 

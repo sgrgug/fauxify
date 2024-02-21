@@ -28,8 +28,6 @@ class ParentBank extends Base
         } else {
             return $this->randArray($allBanks);
         }
-        
-        return $this->randArray($allBanks);
     }
 
     /**
@@ -47,8 +45,6 @@ class ParentBank extends Base
         } else {
             return $this->randArray($this->classABanks);
         }
-        
-        return $this->randArray($this->classABanks);
     }
 
     /**
@@ -66,8 +62,6 @@ class ParentBank extends Base
         } else {
             return $this->randArray($this->classBBanks);
         }
-        
-        return $this->randArray($this->classBBanks);
     }
 
     /**
@@ -85,8 +79,6 @@ class ParentBank extends Base
         } else {
             return $this->randArray($this->classCBanks);
         }
-        
-        return $this->randArray($this->classCBanks);
     }
 
 

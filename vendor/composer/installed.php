@@ -1,8 +1,8 @@
 <?php return array(
     'root' => array(
         'name' => 'fauxify/fauxify',
-        'pretty_version' => '1.0.5',
-        'version' => '1.0.5.0',
+        'pretty_version' => '1.0.9',
+        'version' => '1.0.9.0',
         'reference' => NULL,
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
@@ -11,8 +11,8 @@
     ),
     'versions' => array(
         'fauxify/fauxify' => array(
-            'pretty_version' => '1.0.5',
-            'version' => '1.0.5.0',
+            'pretty_version' => '1.0.9',
+            'version' => '1.0.9.0',
             'reference' => NULL,
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
@@ -22,7 +22,7 @@
         'myclabs/deep-copy' => array(
             'pretty_version' => '1.x-dev',
             'version' => '1.9999999.9999999.9999999-dev',
-            'reference' => '202aaf6b7c2e1e0a622b0298e9f3f537e4d84018',
+            'reference' => '2f5294676c802a62b0549f6bc8983f14294ce369',
             'type' => 'library',
             'install_path' => __DIR__ . '/../myclabs/deep-copy',
             'aliases' => array(),
@@ -117,7 +117,7 @@
         'phpunit/phpunit' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'b315a7c32a3a1033870236fb36914d8cf366c74a',
+            'reference' => '2b9afb5df0797185df0423ce0213aff951e5bdcf',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpunit/phpunit',
             'aliases' => array(

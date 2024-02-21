@@ -1208,7 +1208,7 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
     {
         Event\Facade::emitter()->testTriggeredPhpunitDeprecation(
             $this->valueObjectForEvents(),
-            'iniSet() is deprecated and will be removed in PHPUnit 12. No replacement is/will be provided.',
+            'iniSet() is deprecated and will be removed in PHPUnit 12 without replacement.',
         );
 
         $currentValue = ini_set($varName, $newValue);
@@ -1238,7 +1238,7 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
     {
         Event\Facade::emitter()->testTriggeredPhpunitDeprecation(
             $this->valueObjectForEvents(),
-            'setLocale() is deprecated and will be removed in PHPUnit 12. No replacement is/will be provided.',
+            'setLocale() is deprecated and will be removed in PHPUnit 12 without replacement.',
         );
 
         if (count($arguments) < 2) {
@@ -1291,6 +1291,7 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
             callOriginalClone: false,
             cloneArguments: false,
             allowMockingUnknownTypes: false,
+            returnValueGeneration: self::generateReturnValuesForTestDoubles(),
         );
 
         assert($mock instanceof $originalClassName);
@@ -1310,7 +1311,11 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
      */
     final protected function createMockForIntersectionOfInterfaces(array $interfaces): MockObject
     {
-        $mock = (new MockGenerator)->testDoubleForInterfaceIntersection($interfaces, true);
+        $mock = (new MockGenerator)->testDoubleForInterfaceIntersection(
+            $interfaces,
+            true,
+            returnValueGeneration: self::generateReturnValuesForTestDoubles(),
+        );
 
         assert($mock instanceof MockObject);
 
@@ -1361,13 +1366,18 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
      */
     final protected function createPartialMock(string $originalClassName, array $methods): MockObject
     {
-        $partialMock = $this->getMockBuilder($originalClassName)
+        $mockBuilder = $this->getMockBuilder($originalClassName)
             ->disableOriginalConstructor()
             ->disableOriginalClone()
             ->disableArgumentCloning()
             ->disallowMockingUnknownTypes()
-            ->onlyMethods($methods)
-            ->getMock();
+            ->onlyMethods($methods);
+
+        if (!self::generateReturnValuesForTestDoubles()) {
+            $mockBuilder->disableAutoReturnValueGeneration();
+        }
+
+        $partialMock = $mockBuilder->getMock();
 
         Event\Facade::emitter()->testCreatedPartialMockObject(
             $originalClassName,
@@ -1395,7 +1405,7 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
     {
         Event\Facade::emitter()->testTriggeredPhpunitDeprecation(
             $this->valueObjectForEvents(),
-            'createTestProxy() is deprecated and will be removed in PHPUnit 12. No replacement is/will be provided.',
+            'createTestProxy() is deprecated and will be removed in PHPUnit 12 without replacement.',
         );
 
         $testProxy = $this->getMockBuilder($originalClassName)
@@ -1431,7 +1441,7 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
     {
         Event\Facade::emitter()->testTriggeredPhpunitDeprecation(
             $this->valueObjectForEvents(),
-            'getMockForAbstractClass() is deprecated and will be removed in PHPUnit 12. No replacement is/will be provided.',
+            'getMockForAbstractClass() is deprecated and will be removed in PHPUnit 12 without replacement.',
         );
 
         $mockObject = (new MockGenerator)->mockObjectForAbstractClass(
@@ -1466,7 +1476,7 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
     {
         Event\Facade::emitter()->testTriggeredPhpunitDeprecation(
             $this->valueObjectForEvents(),
-            'getMockFromWsdl() is deprecated and will be removed in PHPUnit 12. No replacement is/will be provided.',
+            'getMockFromWsdl() is deprecated and will be removed in PHPUnit 12 without replacement.',
         );
 
         if ($originalClassName === '') {
@@ -1529,7 +1539,7 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
     {
         Event\Facade::emitter()->testTriggeredPhpunitDeprecation(
             $this->valueObjectForEvents(),
-            'getMockForTrait() is deprecated and will be removed in PHPUnit 12. No replacement is/will be provided.',
+            'getMockForTrait() is deprecated and will be removed in PHPUnit 12 without replacement.',
         );
 
         $mockObject = (new MockGenerator)->mockObjectForTrait(
@@ -1563,7 +1573,7 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
     {
         Event\Facade::emitter()->testTriggeredPhpunitDeprecation(
             $this->valueObjectForEvents(),
-            'getObjectForTrait() is deprecated and will be removed in PHPUnit 12. No replacement is/will be provided.',
+            'getObjectForTrait() is deprecated and will be removed in PHPUnit 12 without replacement.',
         );
 
         return (new MockGenerator)->objectForTrait(
@@ -1836,7 +1846,9 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
 
         if ($activeErrorHandlers !== $this->backupGlobalErrorHandlers) {
             if (count($activeErrorHandlers) > count($this->backupGlobalErrorHandlers)) {
-                $message = 'Test code or tested code did not remove its own error handlers';
+                if (!$this->inIsolation) {
+                    $message = 'Test code or tested code did not remove its own error handlers';
+                }
             } else {
                 $message = 'Test code or tested code removed error handlers other than its own';
             }
@@ -1850,9 +1862,22 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
             }
         }
 
+        if ($message !== null) {
+            Event\Facade::emitter()->testConsideredRisky(
+                $this->valueObjectForEvents(),
+                $message,
+            );
+
+            $this->status = TestStatus::risky($message);
+        }
+
+        $message = null;
+
         if ($activeExceptionHandlers !== $this->backupGlobalExceptionHandlers) {
             if (count($activeExceptionHandlers) > count($this->backupGlobalExceptionHandlers)) {
-                $message = 'Test code or tested code did not remove its own exception handlers';
+                if (!$this->inIsolation) {
+                    $message = 'Test code or tested code did not remove its own exception handlers';
+                }
             } else {
                 $message = 'Test code or tested code removed exception handlers other than its own';
             }
@@ -2461,6 +2486,7 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
             callOriginalClone: false,
             cloneArguments: false,
             allowMockingUnknownTypes: false,
+            returnValueGeneration: self::generateReturnValuesForTestDoubles(),
         );
 
         Event\Facade::emitter()->testCreatedStub($originalClassName);
@@ -2478,7 +2504,11 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
      */
     final protected static function createStubForIntersectionOfInterfaces(array $interfaces): Stub
     {
-        $stub = (new MockGenerator)->testDoubleForInterfaceIntersection($interfaces, false);
+        $stub = (new MockGenerator)->testDoubleForInterfaceIntersection(
+            $interfaces,
+            false,
+            returnValueGeneration: self::generateReturnValuesForTestDoubles(),
+        );
 
         Event\Facade::emitter()->testCreatedStubForIntersectionOfInterfaces($interfaces);
 
@@ -2507,5 +2537,10 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
         }
 
         return $o;
+    }
+
+    private static function generateReturnValuesForTestDoubles(): bool
+    {
+        return MetadataRegistry::parser()->forClass(static::class)->isDisableReturnValueGenerationForTestDoubles()->isEmpty();
     }
 }

@@ -10,12 +10,15 @@
 namespace PHPUnit\TextUI\CliArguments;
 
 use function array_map;
+use function array_merge;
 use function basename;
 use function explode;
 use function getcwd;
 use function is_file;
 use function is_numeric;
 use function sprintf;
+use function str_contains;
+use PHPUnit\Event\Facade as EventFacade;
 use PHPUnit\Runner\TestSuiteSorter;
 use PHPUnit\Util\Filesystem;
 use SebastianBergmann\CliParser\Exception as CliParserException;
@@ -24,7 +27,7 @@ use SebastianBergmann\CliParser\Parser as CliParser;
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-final readonly class Builder
+final class Builder
 {
     private const LONG_OPTIONS = [
         'atleast-version=',
@@ -126,6 +129,11 @@ final readonly class Builder
         'debug',
     ];
     private const SHORT_OPTIONS = 'd:c:h';
+
+    /**
+     * @psalm-var array<string, non-negative-int>
+     */
+    private array $processed = [];
 
     /**
      * @throws Exception
@@ -245,6 +253,8 @@ final readonly class Builder
         $debug                             = false;
 
         foreach ($options[0] as $option) {
+            $optionAllowedMultipleTimes = false;
+
             switch ($option[0]) {
                 case '--colors':
                     $colors = $option[1] ?: \PHPUnit\TextUI\Configuration\Configuration::COLOR_AUTO;
@@ -410,27 +420,87 @@ final readonly class Builder
                     break;
 
                 case '--group':
-                    $groups = explode(',', $option[1]);
+                    if (str_contains($option[1], ',')) {
+                        EventFacade::emitter()->testRunnerTriggeredWarning(
+                            'Using comma-separated values with --group is deprecated and will no longer work in PHPUnit 12',
+                        );
+                    }
+
+                    if ($groups === null) {
+                        $groups = [];
+                    }
+
+                    $groups = array_merge($groups, explode(',', $option[1]));
+
+                    $optionAllowedMultipleTimes = true;
 
                     break;
 
                 case '--exclude-group':
-                    $excludeGroups = explode(',', $option[1]);
+                    if (str_contains($option[1], ',')) {
+                        EventFacade::emitter()->testRunnerTriggeredWarning(
+                            'Using comma-separated values with --exclude-group is deprecated and will no longer work in PHPUnit 12',
+                        );
+                    }
+
+                    if ($excludeGroups === null) {
+                        $excludeGroups = [];
+                    }
+
+                    $excludeGroups = array_merge($excludeGroups, explode(',', $option[1]));
+
+                    $optionAllowedMultipleTimes = true;
 
                     break;
 
                 case '--covers':
-                    $testsCovering = array_map('strtolower', explode(',', $option[1]));
+                    if (str_contains($option[1], ',')) {
+                        EventFacade::emitter()->testRunnerTriggeredWarning(
+                            'Using comma-separated values with --covers is deprecated and will no longer work in PHPUnit 12',
+                        );
+                    }
+
+                    if ($testsCovering === null) {
+                        $testsCovering = [];
+                    }
+
+                    $testsCovering = array_merge($testsCovering, array_map('strtolower', explode(',', $option[1])));
+
+                    $optionAllowedMultipleTimes = true;
 
                     break;
 
                 case '--uses':
-                    $testsUsing = array_map('strtolower', explode(',', $option[1]));
+                    if (str_contains($option[1], ',')) {
+                        EventFacade::emitter()->testRunnerTriggeredWarning(
+                            'Using comma-separated values with --uses is deprecated and will no longer work in PHPUnit 12',
+                        );
+                    }
+
+                    if ($testsUsing === null) {
+                        $testsUsing = [];
+                    }
+
+                    $testsUsing = array_merge($testsUsing, array_map('strtolower', explode(',', $option[1])));
+
+                    $optionAllowedMultipleTimes = true;
 
                     break;
 
                 case '--test-suffix':
-                    $testSuffixes = explode(',', $option[1]);
+                    if (str_contains($option[1], ',')) {
+                        EventFacade::emitter()->testRunnerTriggeredWarning(
+                            'Using comma-separated values with --test-suffix is deprecated and will no longer work in PHPUnit 12',
+                        );
+                    }
+
+                    if ($testSuffixes === null) {
+                        $testSuffixes = [];
+                    }
+
+                    $testSuffixes = array_merge($testSuffixes, explode(',', $option[1]));
+
+                    $optionAllowedMultipleTimes = true;
 
                     break;
 
@@ -838,6 +908,10 @@ final readonly class Builder
 
                     break;
             }
+
+            if (!$optionAllowedMultipleTimes) {
+                $this->markProcessed($option[0]);
+            }
         }
 
         if (empty($iniSettings)) {
@@ -948,5 +1022,28 @@ final readonly class Builder
             $printerTestDox,
             $debug,
         );
+    }
+
+    /**
+     * @psalm-param non-empty-string $option
+     */
+    private function markProcessed(string $option): void
+    {
+        if (!isset($this->processed[$option])) {
+            $this->processed[$option] = 1;
+
+            return;
+        }
+
+        $this->processed[$option]++;
+
+        if ($this->processed[$option] === 2) {
+            EventFacade::emitter()->testRunnerTriggeredWarning(
+                sprintf(
+                    'Option %s cannot be used more than once',
+                    $option,
+                ),
+            );
+        }
     }
 }
